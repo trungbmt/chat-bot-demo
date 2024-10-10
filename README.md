@@ -57,13 +57,30 @@ async generateResponse(
 
 Each time the client calls the API to the backend, it also attaches a UUID (a unique key) and listens for the socket event ```chat-generating-${uuid}```. Since we need to listen for the results of the stream for each request, we must provide a unique key; otherwise, we cannot handle multiple requests simultaneously.
 ```
-    #FE side
+    #FE side ChatItem.jsx
     const { mutate: sendMessageFnc, isLoading } = useSendMessage();
     const sendMessage = useCallback(() => {
         if (message) {
             sendMessageFnc({ message, socketId: socket.id, uuid, model });
         }
     }, [message, model, sendMessageFnc, uuid]);
+    #FE side ReponseItem.jsx
+    const [isGenerating, setIsGenerating] = useState(true);
+    const [text, setText] = useState("");
+    useEffect(() => {
+        socket.on(`chat-generating-${uuid}`, (data) => {
+            if (!data.isLastChunk) {
+                setText((pre) => (pre += data.text));
+            } else {
+                setIsGenerating(false);
+            }
+        });
+        return () => {
+            socket.off(`chat-generating-${uuid}`);
+        };
+    }, [uuid]);
+
+
     #BE side  
     @Post()
     handleMessage(
