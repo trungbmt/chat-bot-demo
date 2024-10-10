@@ -64,6 +64,9 @@ Each time the client calls the API to the backend, it also attaches a UUID (a un
             sendMessageFnc({ message, socketId: socket.id, uuid, model });
         }
     }, [message, model, sendMessageFnc, uuid]);
+
+```
+```
     #FE side ReponseItem.jsx
     const [isGenerating, setIsGenerating] = useState(true);
     const [text, setText] = useState("");
@@ -80,7 +83,9 @@ Each time the client calls the API to the backend, it also attaches a UUID (a un
         };
     }, [uuid]);
 
+```
 
+```
     #BE side  
     @Post()
     handleMessage(
