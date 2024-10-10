@@ -11,8 +11,10 @@
 2. Install the dependencies using Yarn: ```yarn install ``` 
 3. You may need to create a `.env` file for environment variables. You can copy the `.env.example` to `.env`: ```cp .env.example .env ``` 
 4. Start the server: 
+
     with Yarn: ```yarn start ``` 
-    or with Docker ```docker-compose up```
+
+    or with Docker: ```docker-compose up```
 5. The backend should now be running at `http://localhost:3000` and `3001` for the Socket.IO (or the port specified in your configuration). 
 ### Setting Up the Frontend (FE) 
 1. Navigate to the `FE` directory: ```cd FE ``` 
