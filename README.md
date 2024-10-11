@@ -10,7 +10,11 @@
 1. Navigate to the `BE` directory: ```cd BE ```
 2. Install the dependencies using Yarn: ```yarn install ``` 
 3. You may need to create a `.env` file for environment variables. You can copy the `.env.example` to `.env`: ```cp .env.example .env ``` 
-4. Start the development server: ```yarn start ``` 
+4. Start the server: 
+
+    with Yarn: ```yarn start ``` 
+
+    or with Docker: ```docker-compose up```
 5. The backend should now be running at `http://localhost:3000` and `3001` for the Socket.IO (or the port specified in your configuration). 
 ### Setting Up the Frontend (FE) 
 1. Navigate to the `FE` directory: ```cd FE ``` 
@@ -53,13 +57,35 @@ async generateResponse(
 
 Each time the client calls the API to the backend, it also attaches a UUID (a unique key) and listens for the socket event ```chat-generating-${uuid}```. Since we need to listen for the results of the stream for each request, we must provide a unique key; otherwise, we cannot handle multiple requests simultaneously.
 ```
-    #FE side
+    #FE side ChatItem.jsx
     const { mutate: sendMessageFnc, isLoading } = useSendMessage();
     const sendMessage = useCallback(() => {
         if (message) {
             sendMessageFnc({ message, socketId: socket.id, uuid, model });
         }
     }, [message, model, sendMessageFnc, uuid]);
+
+```
+```
+    #FE side ReponseItem.jsx
+    const [isGenerating, setIsGenerating] = useState(true);
+    const [text, setText] = useState("");
+    useEffect(() => {
+        socket.on(`chat-generating-${uuid}`, (data) => {
+            if (!data.isLastChunk) {
+                setText((pre) => (pre += data.text));
+            } else {
+                setIsGenerating(false);
+            }
+        });
+        return () => {
+            socket.off(`chat-generating-${uuid}`);
+        };
+    }, [uuid]);
+
+```
+
+```
     #BE side  
     @Post()
     handleMessage(
