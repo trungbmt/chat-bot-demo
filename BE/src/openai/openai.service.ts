@@ -33,7 +33,7 @@ export class OpenAiService {
       }
       callback('lastChunk', true);
     } catch (error) {
-      console.error(error);
+      console.log({ error });
     }
   }
 }

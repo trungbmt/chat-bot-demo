@@ -33,7 +33,7 @@ export class ChatBotsController {
   ) {}
 
   @Post()
-  handleMessage(
+  async handleMessage(
     @Body() { socketId, message, uuid, model },
     @Res() res: Response,
   ) {

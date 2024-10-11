@@ -3,7 +3,7 @@ version: '3.8'
 services:
   chat-bot-demo:
     build: .
-    image: chat-bot-demo:latest
+    image: phamductrungbmt/chat-bot-demo:latest
     ports:
       - "3000:3000"
       - "3001:3001"
